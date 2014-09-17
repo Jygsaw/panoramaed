@@ -6,4 +6,9 @@ Instructions:
     - "git checkout master"
 4)  Run script using node
     - node templater <template file> <data file> <output file>
-    - node templater template.panoramatemplate data.json output.html
+    - node templater.js template.panoramatemplate data.json output.html
+
+Assumptions:
+- "EACH" tokens will not be surrounded by html
+- "EACH" tokens will only appear once per line
+- substitution tokens may appear more than once per line
