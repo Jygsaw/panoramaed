@@ -10,8 +10,8 @@ var tokenLogic = {
 };
 
 // map data token to data value
-function lookup(data, path) {
-  var parts = path.split('.').reverse();
+function lookup(data, pathStr) {
+  var parts = pathStr.split('.').reverse();
   var result = data;
   while (parts.length) {
     result = result[parts.pop()];
@@ -43,9 +43,12 @@ function processLines(lines, endToken) {
       result = result.concat(tokenLogic[match[1]](match[2], logicLines));
     } else {
       // substitute data tokens with data values
-      while (match = line.match(tokenRegex)) {
-        line = line.replace(tokenRegex, lookup(data, match[1]));
-      }
+      var dataRegex = new RegExp(tokenRegex.source, "g");
+      line = line.replace(dataRegex, function() {
+        var newVal = lookup(data, arguments[1]);
+        return newVal !== undefined ? newVal : arguments[0];
+      });
+
       // add line to output
       result.push(line);
     }
