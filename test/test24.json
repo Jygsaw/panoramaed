@@ -1,0 +1,6 @@
+{
+  "students": [
+    { "name": "Bruce Wayne", "nicknames": ["Batman"] },
+    { "name": "Peter Parker", "nicknames": ["Spidey", "Spiderman", "Spider-Man"] }
+  ]
+}
