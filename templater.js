@@ -26,8 +26,14 @@ function processLines(lines, endToken) {
   var result = [];
   var line;
   // iterate while available line does not match endtoken
-  while ((line = lines.pop()) &&
-          !(endToken && line.match(endToken))) {
+  while (lines.length) {
+    line = lines.pop();
+
+    // stop parsing if endToken detected
+    if (endToken && line.match(endToken)) {
+      break;
+    }
+
 // TODO remove debugging
 // console.log("line:", line);
     var tokenRegex = /<\*\s*(\S+)\s*(.*?)\s*\*>/;

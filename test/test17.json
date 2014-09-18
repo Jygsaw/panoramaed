@@ -1,0 +1,11 @@
+{
+  "page": {
+    "title": "Templating Example"
+  },
+  "teacher1": {
+    "name": "Mr. Panorama"
+  },
+  "teacher2": {
+    "name": "Mrs. Panorama"
+  }
+}

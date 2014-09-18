@@ -1,0 +1,10 @@
+<html>
+  <head>
+    <title><* page.title *></title>
+  </head>
+  <body>
+    <h1><* teacher1.name *></h1>
+
+    <h1><* teacher2.name *></h1>
+  </body>
+</html>
