@@ -20,9 +20,10 @@ function lookup(data, pathStr) {
 }
 
 // process input file line by line
-function processLines(lines, endToken) {
+function processLines(lines, data, endToken) {
 // TODO remove debugging
 // console.log("===== PROCESSING =====");
+// console.log(lines);
   var result = [];
   var line;
   // iterate while available line does not match endtoken
@@ -37,16 +38,21 @@ function processLines(lines, endToken) {
 // TODO remove debugging
 // console.log("line:", line);
     var tokenRegex = /<\*\s*(\S+)\s*(.*?)\s*\*>/;
-    // var tokenRegex = /<\*\s*(\S+)\s*(.+?)\s*\*>/;
     var match = line.match(tokenRegex);
 // TODO remove debugging
 // console.log(match);
     if (match && tokenLogic[match[1]]) {
+// console.log("token logic detected");
       // collect lines
-      var logicLines = processLines(lines, 'END' + match[1]);
-
+// console.log("big lines");
+// console.log(lines);
+      var logicLines = processLines(lines, data, 'END' + match[1]);
+// console.log("logic lines");
+// console.log(logicLines);
+// console.log("big lines");
+// console.log(lines);
       // perform token logic and add to output
-      result = result.concat(tokenLogic[match[1]](match[2], logicLines));
+      result = result.concat(tokenLogic[match[1]](match[2], data, logicLines));
     } else {
       // substitute data tokens with data values
       var dataRegex = new RegExp(tokenRegex.source, "g");
@@ -63,15 +69,27 @@ function processLines(lines, endToken) {
 }
 
 // handle EACH processing
-function processEach(argStr, lines) {
+function processEach(argStr, data, lines) {
   console.log("===== PROCESSING EACH =====");
   var args = argStr.split(' ');
+// TODO remove debugging
+// console.log(args);
+// console.log(data);
 
   var result = [];
   var eachArr = lookup(data, args[0]);
   for (var i = 0; i < eachArr.length; i++) {
-    result = result.concat(lines);
+    var subLines = Array.prototype.slice.call(lines).reverse();
+    var subData = {};
+    subData[args[1]] = eachArr[i];
+
+// console.log(subData);
+// console.log(subLines);
+    result = result.concat(processLines(subLines, subData));
   }
+
+// TODO remove debugging
+// console.log(result);
 
   return result;
 }
@@ -79,7 +97,7 @@ function processEach(argStr, lines) {
 // process template
 readStream.on('readable', function() {
   var lineStack = readStream.read().toString().split('\r\n').reverse();
-  processLines(lineStack).forEach(function(data) {
+  processLines(lineStack, data).forEach(function(data) {
     writeStream.write(data + '\r\n');
   });
 });
