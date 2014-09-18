@@ -22,25 +22,25 @@ function lookup(data, path) {
 // process input file line by line
 function processLines(lines, endToken) {
 // TODO remove debugging
-console.log("===== PROCESSING =====");
+// console.log("===== PROCESSING =====");
   var result = [];
   var line;
   // iterate while available line does not match endtoken
   while ((line = lines.pop()) &&
           !(endToken && line.match(endToken))) {
 // TODO remove debugging
-console.log("line:", line);
+// console.log("line:", line);
     var tokenRegex = /<\*\s*(\S+)\s*(.*?)\s*\*>/;
     // var tokenRegex = /<\*\s*(\S+)\s*(.+?)\s*\*>/;
     var match = line.match(tokenRegex);
 // TODO remove debugging
-console.log(match);
+// console.log(match);
     if (match && tokenLogic[match[1]]) {
       // collect lines
       var logicLines = processLines(lines, 'END' + match[1]);
 
-      // perform token logic and add to touput
-      result.push(tokenLogic[match[1]](match[2], logicLines));
+      // perform token logic and add to output
+      result = result.concat(tokenLogic[match[1]](match[2], logicLines));
     } else {
       // substitute data tokens with data values
       while (match = line.match(tokenRegex)) {
@@ -54,15 +54,17 @@ console.log(match);
 }
 
 // handle EACH processing
-function processEach(args, lines) {
+function processEach(argStr, lines) {
   console.log("===== PROCESSING EACH =====");
-  console.log("  args:", args);
-  console.log("  lines:", lines);
+  var args = argStr.split(' ');
 
-  var parts = args.split(' ');
-  console.log("parts:", parts);
+  var result = [];
+  var eachArr = lookup(data, args[0]);
+  for (var i = 0; i < eachArr.length; i++) {
+    result = result.concat(lines);
+  }
 
-  return "stuff";
+  return result;
 }
 
 // process template
